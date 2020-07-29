@@ -92,7 +92,7 @@
             status:1
   
           }
-          imageUrl:''
+          this.imageUrl=''
         },
         quxiao() {
           this.info.show=false

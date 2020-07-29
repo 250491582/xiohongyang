@@ -6,6 +6,7 @@ import qs from 'qs'
 axios.interceptors.response.use(res=>{
 console.group('本次路径:'+res.config.url)
 console.log(res)
+console.groupEnd()
 
 return res
 })
@@ -316,6 +317,74 @@ export const requestSpecUpdata=(params)=>{
 export const requestSpecDel=(params)=>{
     return axios({
         url:baseUrl+'/api/specsdelete',
+        method:'post',
+        data:qs.stringify(params)
+    })
+}
+
+
+
+
+
+
+//商品管理添加
+export const requestGoodsAdd = (params) => {
+    var formData=new FormData();
+    for(let i in params){
+        formData.append(i,params[i])
+    }
+    return axios({
+        url:baseUrl+"/api/goodsadd",
+        method:'post',
+        data:formData
+    })
+}
+
+//商品管理列表
+export const requestGoodsList=(params)=>{
+    return axios({
+        url:baseUrl+'/api/goodslist',
+        method:'get',
+        params:params
+    })
+}
+//商品管理总数
+export const requestGoodsCount=()=>{
+    return axios({
+        url:baseUrl+'/api/goodscount',
+        method:'get'
+        
+    })
+}
+
+
+//商品管理某一条数据的方法
+export const requestGoodsDetail=(params)=>{
+    return axios({
+        url:baseUrl+'/api/goodsinfo',
+        method:'get',
+        params
+    })
+}
+
+//商品管理的修改
+export const requestGoodsUpdata=(params)=>{
+    var formData=new FormData();
+    for(let i in params){
+        formData.append(i,params[i])
+    }
+    return axios({
+        url:baseUrl+'/api/goodsedit',
+        method:'post',
+        data:formData
+    })
+}
+
+
+//商品管理的删除
+export const requestGoodsDel=(params)=>{
+    return axios({
+        url:baseUrl+'/api/goodsdelete',
         method:'post',
         data:qs.stringify(params)
     })

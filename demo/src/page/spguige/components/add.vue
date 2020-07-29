@@ -107,7 +107,7 @@
           status: 1
 
         }
-        attrArr: [{
+        this.attrArr= [{
             value: ''
           },
          

@@ -1,4 +1,4 @@
-import {requestSpecList,requestSpecCount} from '../../util/request'
+import {requestGoodsList,requestGoodsCount} from '../../util/request'
 
 export const state={
     //列表数据
@@ -13,9 +13,7 @@ export const state={
 export const mutations={
     //修改list
     changeList(state,arr){
-         arr.forEach(i => {
-             i.attrs=JSON.parse(i.attrs)
-         });
+     
         state.list=arr
     },
     changetotal(state,num){
@@ -33,15 +31,13 @@ export const actions={
     // 获取列表数据
      requestList(context,bool){
         //如果要获取到所有列表就传个true 分页就不传
-         if(bool){
-            var params={}
-         }else{
-            params={
-                page:context.state.page,
-                size:context.state.size
-         }
-         }
-         requestSpecList(params).then(res=>{
+       
+            var params={
+                 page:context.state.page,
+                size:context.state.size}
+   
+         
+         requestGoodsList(params).then(res=>{
               if(res.data.list.length==0&&context.state.page>1){
                   context.commit('changepage',context.state.page-1)
                   context.dispatch('requestList')
@@ -53,7 +49,7 @@ export const actions={
      },
      //获取总数据
      requestTotal(context){
-        requestSpecCount().then(res=>{
+        requestGoodsCount().then(res=>{
             context.commit('changetotal',res.data.list[0].total)
         })
      },
