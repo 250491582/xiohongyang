@@ -3,37 +3,30 @@
     <el-dialog :title="info.title" :visible.sync="info.show">
       <el-form :model="form">
 
+      
 
-        <el-form-item label="菜单名称" label-width="80px">
+
+        <el-form-item label="标题" label-width="80px">
           <el-input v-model="form.title" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="上级菜单" label-width="80px">
-          <el-select v-model="form.pid" placeholder="请选择活动区域">
-            <el-option label="顶级菜单" :value="0" ></el-option>
-            <el-option :label="item.title" :value="item.id" v-for='item in list' :key='item.id'></el-option>
-          </el-select>
+ 
+
+
+        <el-form-item label="图片"" label-width="80px" >
+          <el-upload
+          class="avatar-uploader"
+          action="#"
+          :show-file-list="false"
+          :on-change='changeImg'
+         >
+          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
         </el-form-item>
 
 
-        <el-form-item label="菜单类型" label-width="80px">
-          <template>
-            <el-radio v-model="form.type" :label="1">目录</el-radio>
-            <el-radio v-model="form.type" :label="2">菜单</el-radio>
-          </template>
-        </el-form-item>
 
 
-        <el-form-item label="菜单图标" label-width="80px" v-if='form.type==1' >
-          <el-select v-model="form.icon" placeholder="请选择图标">
-            <el-option v-for='item in icons' :key='item' :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="菜单地址" label-width="80px" v-if='form.type==2'>
-          <el-select v-model="form.url" placeholder="请选择">
-            <el-option v-for='item in urls' :key='item' :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
 
 
         <!-- 开关 -->
@@ -55,7 +48,7 @@
 </template>
 
 <script>
-  import {requestMenuAdd,requestMDetail ,requestMenuUpdata} from '../../../util/request'
+  import {requestbannerAdd,requestbannerDetail ,requestbannerUpdata} from '../../../util/request'
   import { successAlert,warningAlert } from "../../../util/alert";
   import {mapGetters,mapActions} from 'vuex'
   export default {
@@ -63,46 +56,36 @@
 
     computed:{
       ...mapGetters({
-        list:'menu/list'
+        list:'banner/list'
       })
     },
     data() {
       return {
-
+          //上传完成图片的地址
+          imageUrl:'',
         form: {
-          pid: 0,
-          title: '',
-          icon: '',
-          type: 1,
-          url: '',
-          status: 1,
+          title:'',
+          img:null,
+          status:1
 
         },
-        radio: '1',
-        icons: [
-          "   el-icon-eleme",
-          "el-icon-s-tools",
-          "el-icon-setting"
-        ],
-        urls: ['/jiaose', '/caidan', '/administrator', '/miaoshahuodo', '/lunbotu', '/spfenlei', '/spguanli',
-          '/vipguanli', '/spguige'
-        ]
+     
+    
       }
     },
     methods: {
       ...mapActions({
-        requestList:'menu/requestList'
+        requestList:'banner/requestList'
       }),
       empyt(){
        this.form={
-          pid: 0,
-          title: '',
-          icon: '',
-          type: 1,
-          url: '',
-          status: 1,
+        title:'',
+          img:null,
+          status:1
+
 
         }
+        this.imageUrl=''
       },
       quxiao() {
         this.info.show=false
@@ -113,7 +96,7 @@
       },
       //点击了添加按钮
       add(){
-        requestMenuAdd(this.form).then((res) => {
+        requestbannerAdd(this.form).then((res) => {
           if(res.data.code==200){
             successAlert(res.data.msg)
             //重置form数据
@@ -130,14 +113,15 @@
       },
       //获取一条数据
       getDetail(id){
-        requestMDetail({id:id}).then(res=>{
+        requestbannerDetail({id:id}).then(res=>{
           this.form=res.data.list
           this.form.id=id
+          this.imageUrl=this.$imgPre+res.data.list.img
         })
       },
       //修改
       updata(){
-        requestMenuUpdata(this.form).then(res=>{
+        requestbannerUpdata(this.form).then(res=>{
           if(res.data.code==200){
             successAlert(res.data.msg)
               
@@ -151,6 +135,28 @@
                
 
         })
+      },
+      changeImg(e){
+
+           //上传的文件不能超过2m
+           if(e.size>2*1024*1024){
+              warningAlert('上传的文件不能超过2m')
+              return
+           }
+           
+           // 上传的图片必须是jpg jpeg png gif
+           var extname=e.name.slice(e.name.lastIndexOf('.'))
+              var extArr=['.jpg','.jap','.png','.gif','.jpeg']
+              if(!extArr.some(item=>item===extname)){
+                  warningAlert('上传的文件必须是图片')
+              }
+        
+          //file是上传的图片
+          var file=e.raw
+          //生产一个URL地址，赋值给imgeUrl，展示出来
+          this.imageUrl=URL.createObjectURL(file)
+          this.form.img=file
+        
       }
     }
 
@@ -162,5 +168,29 @@
   .el-switch {
     margin-left: 80px;
   }
+
+  .avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 
 </style>

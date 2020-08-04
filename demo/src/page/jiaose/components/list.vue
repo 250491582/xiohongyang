@@ -58,7 +58,7 @@
           type: 'warning'
         }).then(() => {
           requestRoleDelete({id:id}).then(res=>{
-
+            this.requestList()
 })
 
      

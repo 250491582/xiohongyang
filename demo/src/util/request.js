@@ -1,8 +1,21 @@
 import axios from 'axios'
 import qs from 'qs'
+import store from '../store'
 
 
-//响应 
+
+
+
+// 请求拦截
+axios.interceptors.request.use(config=>{
+if(config.url!=baseUrl+'/api/userlogin'){
+    config.headers.authorization=store.state.user.token
+}
+ return config
+})
+
+
+//响应拦截
 axios.interceptors.response.use(res=>{
 console.group('本次路径:'+res.config.url)
 console.log(res)
@@ -10,6 +23,9 @@ console.groupEnd()
 
 return res
 })
+
+
+
 
 
 const baseUrl='/api'
@@ -385,6 +401,171 @@ export const requestGoodsUpdata=(params)=>{
 export const requestGoodsDel=(params)=>{
     return axios({
         url:baseUrl+'/api/goodsdelete',
+        method:'post',
+        data:qs.stringify(params)
+    })
+}
+
+
+
+
+
+//请求会员列表
+export const requestMembrList=()=>{
+    return axios({
+      url:baseUrl+'/api/memberlist',
+      method:'get',
+  
+
+    })
+}
+
+//请求会员一条
+export const requestMembrInfo=(params)=>{
+    return axios({
+        url:baseUrl+'/api/memberinfo',
+        method:'get',
+        params:params
+    })
+}
+
+
+//会员修改
+export const requestMembrUpdata=(params)=>{
+      return axios({
+          url:baseUrl+'/api/memberedit',
+          method:'post',
+          data:qs.stringify(params)
+      })
+}
+
+
+
+
+
+
+
+
+
+//轮播图添加
+export const requestbannerAdd = (params) => {
+ 
+    var formData=new FormData();
+    for(let i in params){
+        formData.append(i,params[i])
+    }
+    return axios({
+        url:baseUrl+"/api/banneradd",
+        method:'post',
+        data:formData
+    })
+}
+
+//轮播图列表
+export const requestbannerList=(params)=>{
+    return axios({
+        url:baseUrl+'/api/bannerlist',
+        method:'get',
+        params:params
+    })
+}
+
+
+//轮播图某一条数据的方法
+export const requestbannerDetail=(params)=>{
+    return axios({
+        url:baseUrl+'/api/bannerinfo',
+        method:'get',
+        params
+    })
+}
+
+// 轮播图的修改
+export const requestbannerUpdata=(params)=>{
+    var formData=new FormData();
+    for(let i in params){
+        formData.append(i,params[i])
+    }
+    return axios({
+        url:baseUrl+'/api/banneredit',
+        method:'post',
+        data:formData
+    })
+}
+
+
+// 轮播图的删除
+export const requestbannerDel=(params)=>{
+    return axios({
+        url:baseUrl+'/api/bannerdelete',
+        method:'post',
+        data:qs.stringify(params)
+    })
+}
+
+
+
+
+
+
+
+
+
+
+//秒杀添加
+export const requestSeckaAdd = (params) => {
+ 
+
+    return axios({
+        url:baseUrl+"/api/seckadd",
+        method:'post',
+        data:qs.stringify(params)
+    })
+}
+
+//秒杀列表
+export const requestSeckaList=(params)=>{
+    return axios({
+        url:baseUrl+'/api/secklist',
+        method:'get',
+        params:params
+    })
+}
+
+
+//秒杀某一条数据的方法
+export const requestSeckaDetail=(params)=>{
+    return axios({
+        url:baseUrl+'/api/seckinfo',
+        method:'get',
+        params
+    })
+}
+
+// 秒杀的修改
+export const requestSeckaUpdata=(params)=>{
+    return axios({
+        url:baseUrl+'/api/seckedit',
+        method:'post',
+        data:qs.stringify(params)
+    })
+}
+
+
+// 秒杀的删除
+export const requestSeckaDel=(params)=>{
+    return axios({
+        url:baseUrl+'/api/seckdelete',
+        method:'post',
+        data:qs.stringify(params)
+    })
+}
+
+
+//登录
+export const requestLoing=(params)=>{
+    return axios({
+        url:baseUrl+'/api/userlogin',
         method:'post',
         data:qs.stringify(params)
     })

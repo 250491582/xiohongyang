@@ -7,7 +7,8 @@ export const state={
     //数据的总数量
     total:0,
     //当前的页码配置
-    page:1
+    page:1,
+   
 }
 
 export const mutations={
@@ -21,7 +22,8 @@ export const mutations={
     },
     changepage(state,page){
         state.page=page
-    }
+    },
+  
     
 }
 
@@ -29,19 +31,23 @@ export const mutations={
 export const actions={
 
     // 获取列表数据
-     requestList(context,bool){
+     requestList(context){
         //如果要获取到所有列表就传个true 分页就不传
        
-            var params={
-                 page:context.state.page,
-                size:context.state.size}
-   
-         
+            var  params={
+                page:context.state.page,
+                size:context.state.size,
+        
+            }
+      
          requestGoodsList(params).then(res=>{
-              if(res.data.list.length==0&&context.state.page>1){
-                  context.commit('changepage',context.state.page-1)
-                  context.dispatch('requestList')
-              }
+             
+            if (res.data.list.length == 0 && context.state.page > 1) {
+                //commit和dispatch都是调用引号里的函数，后面进行传参，区别就是commit是同步操作，dispatch是异步操作
+                context.commit('changepage', context.state.page - 1)
+                context.dispatch('requestList')
+                return
+            }
 
             context.commit('changeList',res.data.list)
 
@@ -57,7 +63,8 @@ export const actions={
      changepage(context,page ){
       context.commit('changepage',page)
     
-     }
+     },
+ 
 }
 
 export const getters={
